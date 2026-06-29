@@ -1,0 +1,9 @@
+pybullet
+numpy==1.24.4
+open3d==0.12.0
+roboticstoolbox-python[collision]
+trimesh
+urchin
+scikit-image
+opencv-python
+qpsolvers[daqp]
