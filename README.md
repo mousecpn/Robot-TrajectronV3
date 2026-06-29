@@ -1,17 +1,19 @@
 # Robot-TrajectronV3
 
-Robot-TrajectronV3 is a multimodal robot trajectory prediction pipeline for SE(3) end-effector motion. The current codebase trains a CVAE-style predictor conditioned on motion history, robot joint states, scene point clouds, and grasp candidates, then reports ADE/FDE metrics and renders 3D rollouts.
+**Robot-TrajectronV3** is a multimodal robot trajectory prediction pipeline for SE(3) end-effector motion. It trains a CVAE-style predictor conditioned on motion history, robot joint states, scene point clouds, and grasp candidates — then reports ADE/FDE metrics and renders slick 3D rollouts. All on a Franka Emika Panda arm! 
 
-## Highlights
+[[Webpage]](https://mousecpn.github.io/RTV3_page/)
+
+## ✨ Highlights
 
 - SE(3) trajectory prediction with a multimodal generative model implemented in [model/mgcvae.py](/home/u0161364/clean_repo/Robot-TrajectronV3/model/mgcvae.py).
 - Joint conditioning on grasp proposals and scene point clouds through the preprocessing pipeline in [dataset/se3_preprocessing.py](/home/u0161364/clean_repo/Robot-TrajectronV3/dataset/se3_preprocessing.py).
 - Point cloud backbone support through Point Transformer V3 style components in [model/ptv3.py](/home/u0161364/clean_repo/Robot-TrajectronV3/model/ptv3.py).
 - Built-in training, ADE/FDE evaluation, and MP4 visualization scripts via [train.py](/home/u0161364/clean_repo/Robot-TrajectronV3/train.py), [evaluate.py](/home/u0161364/clean_repo/Robot-TrajectronV3/evaluate.py), and [visualization.py](/home/u0161364/clean_repo/Robot-TrajectronV3/visualization.py).
 
-## Installation
+## 🔧 Installation
 
-### Base environment (model training + evaluation + visualization)
+### 📦 Base environment (model training + evaluation + visualization)
 
 The repository depends on a CUDA 11.8 + PyTorch 2.0.1 stack. The environment spec is captured in [environment.yml](/home/u0161364/clean_repo/Robot-TrajectronV3/environment.yml).
 
@@ -20,7 +22,7 @@ conda env create -f environment.yml
 conda activate robot-trajectron
 ```
 
-**Key runtime dependencies:**
+**📋 Key runtime dependencies:**
 
 - Core ML: `torch`, `torchvision`, `tqdm`, `tensorboard`, `tensorboardx`
 - Geometry & optimization: `theseus-ai`, `scipy`
@@ -29,13 +31,13 @@ conda activate robot-trajectron
 - Model utilities: `timm`, `addict`, `einops`, `sharedarray`
 
 ```bash
-# Verify
+# ✅ Verify installation
 python -c "import torch, open3d, imageio, theseus, torch_scatter, spconv.pytorch; print('cuda:', torch.cuda.is_available())"
 ```
 
-> **Note:** `spconv-cu118` is pinned to CUDA 11.8. If your local CUDA toolchain differs, adjust this package first. The training / visualization code paths assume a CUDA-capable GPU.
+> **💡 Note:** `spconv-cu118` is pinned to CUDA 11.8. If your local CUDA toolchain differs, adjust this package first. The training / visualization code paths assume a CUDA-capable GPU.
 
-### Simulation environment (Franka PyBullet deployment + benchmark)
+### 🎮 Simulation environment (Franka PyBullet deployment + benchmark)
 
 The simulation pipeline under [simulation_experiment](/home/u0161364/clean_repo/Robot-TrajectronV3/simulation_experiment) shares the base environment above and adds simulation-specific packages:
 
@@ -49,12 +51,13 @@ Some planning / interactive scripts additionally need:
 pip install spatialmath-python spatialgeometry swift-sim pillow transformations
 ```
 
-**ROS2 (optional):** Only required for the ROS2-based nodes ([trajectron_node.py](simulation_experiment/trajectron_node.py) and variants). Install a working ROS2 distribution providing `rclpy`, `geometry_msgs`, and `std_msgs`.
+**🟢 ROS2 (optional):** Only required for the ROS2-based nodes ([trajectron_node.py](simulation_experiment/trajectron_node.py) and variants). Install a working ROS2 distribution providing `rclpy`, `geometry_msgs`, and `std_msgs`.
 
 All simulation commands should be run from the `simulation_experiment/` directory:
 
 ```bash
 cd simulation_experiment
+# 🚀 Quick smoke test
 python simulated_shared_benchmark.py --method teleop --user singledof --no-debug
 ```
 
@@ -71,9 +74,9 @@ data/
 
 Training uses the packed dataset when `--debug` is enabled, and uses both packed and pile datasets otherwise.
 
-## Data Collection
+## 📊 Data Collection
 
-### 1. Collect trajectory data
+### 🏃 1. Collect trajectory data
 
 The parallel trajectory collection script is [simulation_experiment/data_collection/collect_data_parallel.sh](/home/u0161364/clean_repo/Robot-TrajectronV3/simulation_experiment/data_collection/collect_data_parallel.sh).
 
@@ -97,7 +100,7 @@ python data_collection/main.py \
 	--no-debug
 ```
 
-### 2. Collect point-cloud data
+### ☁️ 2. Collect point-cloud data
 
 The parallel point-cloud collection script is [simulation_experiment/data_collection/collect_pcl_parallel.sh](/home/u0161364/clean_repo/Robot-TrajectronV3/simulation_experiment/data_collection/collect_pcl_parallel.sh).
 
@@ -119,7 +122,7 @@ python data_collection/pcl_collection.py \
 	--no-debug
 ```
 
-## Training
+## 🏋️ Training
 
 The main training entrypoint is [train.py](/home/u0161364/clean_repo/Robot-TrajectronV3/train.py). The checked-in example command from [train.sh](/home/u0161364/clean_repo/Robot-TrajectronV3/train.sh) is:
 
@@ -132,7 +135,7 @@ python train.py \
 	--conf config/config.json
 ```
 
-Useful flags:
+🎛️ Useful flags:
 
 - `--debug`: train only on the packed dataset branch used for quick iteration.
 - `--device cuda:0`: select the GPU device.
@@ -141,7 +144,7 @@ Useful flags:
 
 Checkpoints are saved under `checkpoints/` with names like `epoch10|20Hz|ade21.05.pth`.
 
-## Evaluation
+## 📏 Evaluation
 
 The offline evaluation entrypoint is [evaluate.py](/home/u0161364/clean_repo/Robot-TrajectronV3/evaluate.py).
 
@@ -155,7 +158,7 @@ python evaluate.py \
 
 The metric implementations live in [evaluation/evaluation.py](/home/u0161364/clean_repo/Robot-TrajectronV3/evaluation/evaluation.py).
 
-## Visualization
+## 🎬 Visualization
 
 The rollout visualization entrypoint is [visualization.py](/home/u0161364/clean_repo/Robot-TrajectronV3/visualization.py).
 
@@ -167,7 +170,7 @@ python visualization.py \
 	--device cuda:0
 ```
 
-What it does:
+🎯 What it does:
 
 - Loads the packed dataset branch from `data/data_packed_train_raw`
 - Reconstructs grasp candidates and scene point clouds
@@ -175,7 +178,7 @@ What it does:
 - Saves per-step frames under `gif_images/`
 - Exports an MP4 per trajectory, such as `traj0.mp4`
 
-## Configuration
+## ⚙️ Configuration
 
 The main hyperparameter files are:
 
@@ -184,9 +187,9 @@ The main hyperparameter files are:
 
 Important settings include prediction horizon, latent configuration, KL annealing, grasp and point-cloud encoders, and optimizer schedule.
 
-## Simulation in Franka
+## 🤖 Simulation in Franka
 
-### 1. Keyboard teleoperation and assisted control
+### ⌨️ 1. Keyboard teleoperation and assisted control
 
 Interactive control entrypoints:
 
@@ -212,7 +215,7 @@ The teleoperation mapping is implemented in [simulation_experiment/keyboard_cont
 
 If you do not need ROS2, use the benchmark-oriented non-ROS2 trajectory predictor path in [simulation_experiment/trajectron_node_noros2.py](/home/u0161364/clean_repo/Robot-TrajectronV3/simulation_experiment/trajectron_node_noros2.py) through [simulation_experiment/simulated_shared_benchmark.py](/home/u0161364/clean_repo/Robot-TrajectronV3/simulation_experiment/simulated_shared_benchmark.py).
 
-### 2. Planning scripts and planning benchmark
+### 🗺️ 2. Planning scripts and planning benchmark
 
 Planning-related entrypoints are located in [simulation_experiment/planning_scripts](/home/u0161364/clean_repo/Robot-TrajectronV3/simulation_experiment/planning_scripts).
 
@@ -233,7 +236,7 @@ python planning_scripts/planning_rtv3_parallel.py
 
 These scripts currently use repository-local defaults such as `data/data_packed_train_raw`, `pile/train`, and the checkpoints referenced inside the scripts themselves.
 
-### 3. Simulated shared-control benchmark
+### 🏆 3. Simulated shared-control benchmark
 
 The batch launcher is [simulation_experiment/simulated_shared_benchmark.sh](/home/u0161364/clean_repo/Robot-TrajectronV3/simulation_experiment/simulated_shared_benchmark.sh).
 
@@ -263,19 +266,19 @@ python simulated_shared_benchmark.py \
 	--no-debug
 ```
 
-Supported methods:
+🎮 Supported methods:
 
-- `teleop`: direct teleoperation baseline
-- `ho`: hindsight goal-assistance baseline
-- `rt`: Robot-TrajectronV3 shared control
+- `teleop` 🕹️ — direct teleoperation baseline
+- `ho` 🔮 — hindsight goal-assistance baseline
+- `rt` 🤖 — Robot-TrajectronV3 shared control
 
-Supported user models:
+👤 Supported user models:
 
-- `noisy`
-- `laggy`
-- `lowdof`
-- `singledof`
-- `modeswitching`
+- `noisy` 📢
+- `laggy` 🐢
+- `lowdof` 👆
+- `singledof` ☝️
+- `modeswitching` 🔀
 
 Default outputs are written under `./simulated_shared_benchmark_logs`.
 
