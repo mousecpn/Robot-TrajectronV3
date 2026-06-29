@@ -20,5 +20,5 @@ neural_data_vino_obs/
 *.json
 
 __pycache__/
-data/
+/data/
 
