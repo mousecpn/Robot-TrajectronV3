@@ -1,0 +1,36 @@
+name: shared_control
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pytorch=2.0.1
+  - torchvision=0.15.2
+  - pytorch-cuda=11.8
+  - numpy=1.26.4
+  - scipy=1.15.3
+  - scikit-learn=1.7.0
+  - matplotlib=3.10.3
+  - pandas=2.3.0
+  - tqdm=4.67.3
+  - pyyaml=6.0.2
+  - h5py=3.13.0
+  - addict=2.4.0
+  - einops=0.8.1
+  - timm=1.0.19
+  - plyfile=1.1
+  - tensorboard=2.20.0
+  - tensorboardx=2.6.2.2
+  - sharedarray=3.2.4
+  - ninja
+  - pytorch-cluster=1.6.3
+  - pytorch-scatter=2.1.2
+  - pytorch-sparse=0.6.18
+  - pip
+  - pip:
+      - imageio==2.37.0
+      - open3d==0.19.0
+      - theseus-ai==0.2.3
+      - spconv-cu118==2.3.8

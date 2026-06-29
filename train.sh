@@ -1,0 +1,1 @@
+python train.py --eval_every 1 --preprocess_workers 8 --batch_size 128 --train_epochs 10 --conf config/config.json
