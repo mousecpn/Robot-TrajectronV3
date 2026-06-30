@@ -272,13 +272,17 @@ cd simulation_experiment
 bash simulated_shared_benchmark.sh
 ```
 
+
+
 The launcher currently sweeps:
 
 - users: `noisy`, `laggy`, `modeswitching`, `singledof`
-- method: `rt`
-- `ood_alpha=0.85`
-- `history_size=14`
-- `sigma_coff=1`
+- method: `rt`, `ho`, `teleop`
+
+
+https://github.com/user-attachments/assets/129f2c96-6a72-4b0a-a748-1e92cea9ef8b
+
+
 
 For a single run, call [simulation_experiment/simulated_shared_benchmark.py](/home/u0161364/clean_repo/Robot-TrajectronV3/simulation_experiment/simulated_shared_benchmark.py) directly:
 
