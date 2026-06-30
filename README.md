@@ -6,10 +6,9 @@
 
 ## ✨ Highlights
 
-- SE(3) trajectory prediction with a multimodal generative model implemented in [model/mgcvae.py](/home/u0161364/clean_repo/Robot-TrajectronV3/model/mgcvae.py).
-- Joint conditioning on grasp proposals and scene point clouds through the preprocessing pipeline in [dataset/se3_preprocessing.py](/home/u0161364/clean_repo/Robot-TrajectronV3/dataset/se3_preprocessing.py).
-- Point cloud backbone support through [Point Transformer V3](https://github.com/pointcept/pointtransformerv3) (PTv3) — integrated in [model/ptv3.py](model/ptv3.py).
-- Built-in training, ADE/FDE evaluation, and MP4 visualization scripts via [train.py](/home/u0161364/clean_repo/Robot-TrajectronV3/train.py), [evaluate.py](/home/u0161364/clean_repo/Robot-TrajectronV3/evaluate.py), and [visualization.py](/home/u0161364/clean_repo/Robot-TrajectronV3/visualization.py).
+- **SE(3) shared control via Bayesian posterior inference** — real-time intent inference from user input combined with a learned trajectory prior, producing assistive actions on the Franka Panda (see [`simulation_experiment/simulated_shared_benchmark.py`](simulation_experiment/simulated_shared_benchmark.py) and [`trajectron_node_noros2.py`](simulation_experiment/trajectron_node_noros2.py)).
+- **Trajectory dataset generation** — automated Franka PyBullet pipeline for collecting large-scale SE(3) end-effector trajectories with joint states, grasp candidates, and scene point clouds (entrypoints in [`simulation_experiment/data_collection/`](simulation_experiment/data_collection/)).
+- **Goal-reaching simulation benchmark** — standardized evaluation of shared-control policies (teleop, hindsight, RTV3) under diverse simulated user types (noisy, laggy, single-DoF, mode-switching) with success rate and collision metrics.
 
 ## 🔧 Installation
 
