@@ -76,12 +76,23 @@ The scripts currently expect the following repository-local layout:
 
 ```text
 data/
-	data_scene_raw/
+	urdfs/                   ← robot URDF files (Franka Panda)
+	data_scene_raw/          ← grasp scene data
 	scene_data/
         point_clouds/
 	trajectory/
 		trajectories_pregrasp.npz
 ```
+
+> **📥 Download required assets:** Some directories above are **not** included in the repository and must be downloaded separately:
+> - **`data/urdfs/`** — Franka Panda robot URDF & meshes: [Download from Google Drive](https://drive.google.com/file/d/12o0RlOqypwNL8a3RSuSnlf3c0zhig6Fi/view?usp=drive_link) → extract into `data/urdfs/`
+> - **`data/data_scene_raw/`** — Grasp scene data (grasps.csv, mesh_pose_list, scenes): [Download from Google Drive](https://drive.google.com/file/d/1UWJUufqldwXkl1FPecM07PyVpGk4fws9/view?usp=sharing) → extract into `data/data_scene_raw/`
+>
+> After downloading, verify the contents:
+> ```bash
+> ls data/urdfs/           # should contain .urdf and .obj/.stl files
+> ls data/data_scene_raw/  # should contain grasps.csv, mesh_pose_list/, scenes/
+> ```
 
 Training uses the packed dataset when `--debug` is enabled, and uses both packed and pile datasets otherwise.
 
