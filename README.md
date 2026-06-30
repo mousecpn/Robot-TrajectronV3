@@ -8,7 +8,7 @@
 
 - SE(3) trajectory prediction with a multimodal generative model implemented in [model/mgcvae.py](/home/u0161364/clean_repo/Robot-TrajectronV3/model/mgcvae.py).
 - Joint conditioning on grasp proposals and scene point clouds through the preprocessing pipeline in [dataset/se3_preprocessing.py](/home/u0161364/clean_repo/Robot-TrajectronV3/dataset/se3_preprocessing.py).
-- Point cloud backbone support through Point Transformer V3 style components in [model/ptv3.py](/home/u0161364/clean_repo/Robot-TrajectronV3/model/ptv3.py).
+- Point cloud backbone support through [Point Transformer V3](https://github.com/pointcept/pointtransformerv3) (PTv3) — integrated in [model/ptv3.py](model/ptv3.py).
 - Built-in training, ADE/FDE evaluation, and MP4 visualization scripts via [train.py](/home/u0161364/clean_repo/Robot-TrajectronV3/train.py), [evaluate.py](/home/u0161364/clean_repo/Robot-TrajectronV3/evaluate.py), and [visualization.py](/home/u0161364/clean_repo/Robot-TrajectronV3/visualization.py).
 
 ## 🔧 Installation
@@ -20,6 +20,7 @@ The repository depends on a CUDA 11.8 + PyTorch 2.0.1 stack. The environment spe
 ```bash
 conda env create -f environment.yml
 conda activate robot-trajectron
+MAX_JOBS=4 pip install flash-attn==2.3.6 --no-build-isolation
 ```
 
 **📋 Key runtime dependencies:**
@@ -27,6 +28,7 @@ conda activate robot-trajectron
 - Core ML: `torch`, `torchvision`, `tqdm`, `tensorboard`, `tensorboardx`
 - Geometry & optimization: `theseus-ai`, `scipy`
 - Point cloud & 3D: `open3d`, `plyfile`, `spconv-cu118`, `torch-scatter`, `pytorch-sparse`, `pytorch-cluster`
+- Point Transformer V3: `spconv-cu118`, `torch-scatter`, `flash-attn`, `timm`, `addict`
 - Data processing: `numpy`, `pandas`, `scikit-learn`, `imageio`, `pyyaml`, `h5py`
 - Model utilities: `timm`, `addict`, `einops`, `sharedarray`
 
@@ -36,6 +38,8 @@ python -c "import torch, open3d, imageio, theseus, torch_scatter, spconv.pytorch
 ```
 
 > **💡 Note:** `spconv-cu118` is pinned to CUDA 11.8. If your local CUDA toolchain differs, adjust this package first. The training / visualization code paths assume a CUDA-capable GPU.
+
+> **💡 Note (PTv3 / FlashAttention):** The Point Transformer V3 backbone ([model/ptv3.py](model/ptv3.py)) uses FlashAttention for efficient training. `flash-attn` is listed in `environment.yml` and will be compiled during `conda env create`. This requires **CUDA ≥ 11.6** and a compatible GPU. If your environment doesn't satisfy this, the model falls back gracefully (`import flash_attn` is wrapped in `try/except`).
 
 ### 🎮 Simulation environment (Franka PyBullet deployment + benchmark)
 
@@ -51,7 +55,15 @@ Some planning / interactive scripts additionally need:
 pip install spatialmath-python spatialgeometry swift-sim pillow transformations
 ```
 
-**🟢 ROS2 (optional):** Only required for the ROS2-based nodes ([trajectron_node.py](simulation_experiment/trajectron_node.py) and variants). Install a working ROS2 distribution providing `rclpy`, `geometry_msgs`, and `std_msgs`.
+**� CuRobo (motion planner):** The default motion planner in [`ClutterRemovalSim`](simulation_experiment/experiment/simulation.py) is [**CuRobo**](https://github.com/nvlabs/curobo) from NVIDIA Labs. Install it with:
+
+```bash
+pip install curobo
+```
+
+> **💡 Note:** CuRobo requires **CUDA ≥ 11.8** and a compatible GPU. If unavailable, you can switch to the `neo_ss` or `mppi` fallback planners by passing `planning='neo_ss'` (see [`experiment/simulation.py`](simulation_experiment/experiment/simulation.py) for details).
+
+**�🟢 ROS2 (optional):** Only required for the ROS2-based nodes ([trajectron_node.py](simulation_experiment/trajectron_node.py) and variants). Install a working ROS2 distribution providing `rclpy`, `geometry_msgs`, and `std_msgs`.
 
 All simulation commands should be run from the `simulation_experiment/` directory:
 
@@ -268,17 +280,17 @@ python simulated_shared_benchmark.py \
 
 🎮 Supported methods:
 
-- `teleop` 🕹️ — direct teleoperation baseline
-- `ho` 🔮 — hindsight goal-assistance baseline
-- `rt` 🤖 — Robot-TrajectronV3 shared control
+- `teleop` — direct teleoperation baseline
+- `ho` — hindsight goal-assistance baseline
+- `rt` — Robot-TrajectronV3 shared control
 
 👤 Supported user models:
 
-- `noisy` 📢
-- `laggy` 🐢
-- `lowdof` 👆
-- `singledof` ☝️
-- `modeswitching` 🔀
+- `noisy` 
+- `laggy` 
+- `lowdof` 
+- `singledof` 
+- `modeswitching` 
 
 Default outputs are written under `./simulated_shared_benchmark_logs`.
 

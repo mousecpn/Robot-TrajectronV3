@@ -10,6 +10,7 @@ import json
 import imageio
 from pathlib import Path
 from model.transform import SO3_R3, quaternion_to_matrix, Transform, select_grasps
+from scipy.spatial.transform import Rotation
 from model.io import read_point_cloud
 import time
 

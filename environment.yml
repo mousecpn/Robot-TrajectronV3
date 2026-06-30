@@ -1,6 +1,7 @@
-name: shared_control
+name: robot-trajectron
 channels:
   - pytorch
+  - pyg
   - nvidia
   - conda-forge
   - defaults
@@ -25,12 +26,19 @@ dependencies:
   - tensorboardx=2.6.2.2
   - sharedarray=3.2.4
   - ninja
+  - suitesparse
+  - scikit-sparse=0.4.16
   - pytorch-cluster=1.6.3
   - pytorch-scatter=2.1.2
   - pytorch-sparse=0.6.18
   - pip
   - pip:
-      - imageio==2.37.0
+      # - imageio[ffmpeg]==2.37.0
+      = imageio-ffmpeg
       - open3d==0.19.0
       - theseus-ai==0.2.3
       - spconv-cu118==2.3.8
+      - setuptools==69.5.1
+      - trimesh
+      - opencv-python
+      - python-fcl
