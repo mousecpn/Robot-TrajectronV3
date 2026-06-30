@@ -50,9 +50,9 @@ def main():
         trajectory_files = [Path("data/trajectory/trajectories_pregrasp_packed.npz")]
         pcl_roots = [Path("data/scene_packed")]
     else:
-        scene_files = [Path("data/data_pile_train_fix_raw_graspnet1b"),Path("data/data_packed_train_raw"), ] # Path("data/data_packed_train_raw")
-        trajectory_files = [Path("data/trajectory/trajectories_pregrasp_pile2.npz"), Path("data/trajectory/trajectories_pregrasp_zflip.npz"), ] #   Path("data/trajectory/trajectories_pregrasp_zflip_mpc.npz")
-        pcl_roots = [Path("data/scene_pile_graspnet1b"), Path("data/scene_packed"), ] #  Path("data/scene_packed")
+        scene_files = [Path(p) for p in args.scene_files]
+        trajectory_files = [Path(p) for p in args.trajectory_files]
+        pcl_roots = [Path(p) for p in args.pcl_roots]
 
     dt = 0.05
     frequency = 1/dt

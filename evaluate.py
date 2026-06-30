@@ -71,6 +71,15 @@ def main():
     parser.add_argument("--checkpoint", type=str, default='checkpoints/epoch10|20Hz|ade21.05.pth', help="Path to trained checkpoint")
     parser.add_argument("--batch_size", type=int, default=128, help="Batch size for evaluation")
     parser.add_argument("--device", type=str, default="cuda:0", help="Device for evaluation")
+    parser.add_argument("--scene_files", type=str, nargs='+',
+                        default=["data/data_pile_train_fix_raw_graspnet1b", "data/data_packed_train_raw"],
+                        help="Space-separated list of scene data directories")
+    parser.add_argument("--trajectory_files", type=str, nargs='+',
+                        default=["data/trajectory/trajectories_pregrasp_pile2.npz", "data/trajectory/trajectories_pregrasp_zflip.npz"],
+                        help="Space-separated list of trajectory .npz files")
+    parser.add_argument("--pcl_roots", type=str, nargs='+',
+                        default=["data/scene_pile_graspnet1b", "data/scene_packed"],
+                        help="Space-separated list of point cloud root directories")
     args = parser.parse_args()
 
     if not torch.cuda.is_available() or args.device == "cpu":
@@ -88,14 +97,10 @@ def main():
     hyperparams["batch_size"] = args.batch_size
     hyperparams["frequency"] = 20  # 固定 frequency（和训练一致）
 
-    # Load dataset
-    scene_files = [Path("data/data_pile_train_fix_raw_graspnet1b"),Path("data/data_packed_train_raw"), ] # Path("data/data_packed_train_raw")
-    trajectory_files = [Path("data/trajectory/trajectories_pregrasp_pile2.npz"), Path("data/trajectory/trajectories_pregrasp_zflip.npz"), ] #   Path("data/trajectory/trajectories_pregrasp_zflip_mpc.npz")
-    pcl_roots = [Path("data/scene_pile_graspnet1b"), Path("data/scene_packed"), ] #  Path("data/scene_data")
-    
-    # scene_files = [Path("data/data_packed_train_raw")]
-    # trajectory_files = [Path("data/trajectory/trajectories_pregrasp_packed.npz")]
-    # pcl_roots = [Path("data/scene_packed")]
+    # Load dataset from command-line args
+    scene_files = [Path(p) for p in args.scene_files]
+    trajectory_files = [Path(p) for p in args.trajectory_files]
+    pcl_roots = [Path(p) for p in args.pcl_roots]
     
     dt = 0.05
     relative = True

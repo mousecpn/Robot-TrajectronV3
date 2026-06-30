@@ -41,8 +41,9 @@ def main():
     hyperparams['frequency'] = 20
     dim = 6
 
-    scene_file = Path("data/data_packed_train_raw")
-    trajectory_file = Path("data/trajectory/trajectories_pregrasp_packed.npz")
+    scene_file = Path(args.scene_files[0]) if args.scene_files else Path("data/data_packed_train_raw")
+    trajectory_file = Path(args.trajectory_files[0]) if args.trajectory_files else Path("data/trajectory/trajectories_pregrasp_packed.npz")
+    pcl_root = Path(args.pcl_roots[0]) if args.pcl_roots else Path("data/scene_packed")
     dt = 1.0/hyperparams['frequency']
 
     scene_data, train_traj_data, test_traj_data = load_data(scene_file, trajectory_file, dt, viz=True)
@@ -76,7 +77,7 @@ def main():
         T_base_task = torch.tensor(seq['robot_base_pose'], dtype=torch.float)
         T_task_base = torch.inverse(T_base_task)
         scene_id = seq['scene_id']
-        pcl_ = read_point_cloud(Path("data/scene_packed"), scene_id)
+        pcl_ = read_point_cloud(pcl_root, scene_id)
         pcl_ = torch.tensor(pcl_, dtype=torch.float32)
         pcl_ = T_base_task @ torch.cat((pcl_,torch.ones_like(pcl_[:,:1])), dim=-1).unsqueeze(-1)
         

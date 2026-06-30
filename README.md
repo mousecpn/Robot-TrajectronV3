@@ -153,6 +153,21 @@ python train.py \
 - `--device cuda:0`: select the GPU device.
 - `--batch_size`: overrides the JSON config batch size.
 - `--train_epochs`: number of epochs.
+- `--scene_files`, `--trajectory_files`, `--pcl_roots`: override default data paths (see below).
+
+**📂 Custom data paths:** All scripts accept `--scene_files`, `--trajectory_files`, and `--pcl_roots` as space-separated lists. Defaults match the repository layout:
+
+```bash
+# Full dataset (default, non-debug mode)
+python train.py ... \
+	--scene_files data/data_pile_train_fix_raw_graspnet1b data/data_packed_train_raw \
+	--trajectory_files data/trajectory/trajectories_pregrasp_pile2.npz data/trajectory/trajectories_pregrasp_zflip.npz \
+	--pcl_roots data/scene_pile_graspnet1b data/scene_packed
+
+# Debug / packed-only
+python train.py ... --debug
+# (--debug automatically uses packed-only paths; you can also pass them explicitly)
+```
 
 Checkpoints are saved under `checkpoints/` with names like `epoch10|20Hz|ade21.05.pth`.
 
@@ -184,7 +199,8 @@ python visualization.py \
 
 🎯 What it does:
 
-- Loads the packed dataset branch from `data/data_packed_train_raw`
+- Loads scene + trajectory + point-cloud data (controlled by `--scene_files`, `--trajectory_files`, `--pcl_roots`; takes the first entry of each)
+- Defaults to the packed dataset branch (`data/data_packed_train_raw` / `trajectories_pregrasp_packed.npz` / `data/scene_packed`)
 - Reconstructs grasp candidates and scene point clouds
 - Generates predicted future SE(3) trajectories
 - Saves per-step frames under `gif_images/`

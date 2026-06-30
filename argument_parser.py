@@ -17,6 +17,21 @@ parser.add_argument("--preprocess_workers",
 
 
 # Data Parameters
+parser.add_argument("--scene_files",
+                    help="space-separated list of scene data directories",
+                    type=str, nargs='+',
+                    default=["data/data_pile_train_fix_raw_graspnet1b", "data/data_packed_train_raw"])
+
+parser.add_argument("--trajectory_files",
+                    help="space-separated list of trajectory .npz files",
+                    type=str, nargs='+',
+                    default=["data/trajectory/trajectories_pregrasp_pile2.npz", "data/trajectory/trajectories_pregrasp_zflip.npz"])
+
+parser.add_argument("--pcl_roots",
+                    help="space-separated list of point cloud root directories",
+                    type=str, nargs='+',
+                    default=["data/scene_pile_graspnet1b", "data/scene_packed"])
+
 parser.add_argument("--data_path",
                     help="json",
                     type=str,
