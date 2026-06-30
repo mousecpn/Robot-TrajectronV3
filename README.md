@@ -159,9 +159,9 @@ python train.py \
 ```bash
 # Full dataset (default, non-debug mode)
 python train.py ... \
-	--scene_files data/data_pile_train_fix_raw_graspnet1b data/data_packed_train_raw \
+	--scene_files data/data_pile_train_fix_raw_graspnet1b data/data_scene_raw \
 	--trajectory_files data/trajectory/trajectories_pregrasp_pile2.npz data/trajectory/trajectories_pregrasp_zflip.npz \
-	--pcl_roots data/scene_pile_graspnet1b data/scene_packed
+	--pcl_roots data/scene_pile_graspnet1b data/scene_data
 
 # Debug / packed-only
 python train.py ... --debug
@@ -199,7 +199,7 @@ python visualization.py \
 🎯 What it does:
 
 - Loads scene + trajectory + point-cloud data (controlled by `--scene_files`, `--trajectory_files`, `--pcl_roots`; takes the first entry of each)
-- Defaults to the packed dataset branch (`data/data_packed_train_raw` / `trajectories_pregrasp_packed.npz` / `data/scene_packed`)
+- Defaults to the packed dataset branch (`data/data_scene_raw` / `trajectories_pregrasp.npz` / `data/scene_data`)
 - Reconstructs grasp candidates and scene point clouds
 - Generates predicted future SE(3) trajectories
 - Saves per-step frames under `gif_images/`
@@ -261,7 +261,7 @@ python planning_scripts/planning_rtv3.py
 python planning_scripts/planning_rtv3_parallel.py
 ```
 
-These scripts currently use repository-local defaults such as `data/data_packed_train_raw`, `pile/train`, and the checkpoints referenced inside the scripts themselves.
+These scripts currently use repository-local defaults such as `data/data_scene_raw`, `pile/train`, and the checkpoints referenced inside the scripts themselves.
 
 ### 🏆 3. Simulated shared-control benchmark
 
